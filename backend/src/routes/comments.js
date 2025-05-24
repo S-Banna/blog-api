@@ -25,7 +25,7 @@ router.get("/:postId", async (req, res) => {
 		where: { postId },
 		orderBy: { createdAt: "asc" },
 		include: {
-			user: { select: { username: true } },
+			user: true,
 		},
 	});
 	res.json(comments);

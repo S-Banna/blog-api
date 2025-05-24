@@ -1,0 +1,43 @@
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+nav {
+	background: #333;
+	color: white;
+	padding: 10px 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+nav a,
+nav span {
+	color: white;
+	margin-right: 10px;
+	text-decoration: none;
+}
+
+nav img {
+	width: 20px;
+	vertical-align: middle;
+	margin-left: 10px;
+}
+
+.auth-form {
+	padding: 20px;
+	max-width: 400px;
+	margin: auto;
+}
+
+.auth-form input {
+	display: block;
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 10px;
+}
+
+.auth-form button {
+	padding: 8px 16px;
+}

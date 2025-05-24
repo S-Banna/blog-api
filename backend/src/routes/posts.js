@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
 	const post = await prisma.post.findUnique({
 		where: { id: parseInt(req.params.id) },
-		include: { _count: { select: { likes: true } } },
+		include: { likes: true },
 	});
 	if (!post) return res.status(404).json({ error: "Not found" });
 	res.json(post);
@@ -32,7 +32,9 @@ router.post("/", ensureAuthenticated, async (req, res) => {
 		return res.status(403).json({ message: "Forbidden" });
 
 	const { title, content } = req.body;
-	const post = await prisma.post.create({ data: { title, content } });
+	const post = await prisma.post.create({
+		data: { title, content, user: { connect: { id: req.user.id } } },
+	});
 	res.status(201).json(post);
 });
 
