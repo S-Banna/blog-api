@@ -12,15 +12,20 @@ const PostDetail = () => {
 	const [comments, setComments] = useState([]);
 	const [commentText, setCommentText] = useState("");
 	const token = localStorage.getItem("token");
+	const [likedByUser, setLikedByUser] = useState(false);
 
 	useEffect(() => {
-		axios
-			.get(`${import.meta.env.VITE_API_URL}/posts/${id}`)
-			.then((res) => setPost(res.data));
+		axios.get(`${import.meta.env.VITE_API_URL}/posts/${id}`).then((res) => {
+			setPost(res.data);
+		});
 		axios
 			.get(`${import.meta.env.VITE_API_URL}/comments/${id}`)
 			.then((res) => setComments(res.data));
 	}, [id]);
+
+	useEffect(() => {
+		setLikedByUser(post && user ? !!post.likes.find((like) => like.userId == user.id) : false);
+	}, [post, user]);
 
 	const addComment = () => {
 		if (commentText == "") return;
@@ -51,8 +56,8 @@ const PostDetail = () => {
 			<p>{post.content}</p>
 			<LikeButton
 				postId={post.id}
-				initialLiked={post.likedByUser}
-				initialLikes={post.likes || 0}
+				initialLiked={likedByUser}
+				initialLikes={post.likes.length || 0}
 			/>
 			<div>
 				<h3>Comments</h3>
