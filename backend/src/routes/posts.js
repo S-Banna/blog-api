@@ -11,9 +11,7 @@ router.get("/", async (req, res) => {
 
 	const posts = await prisma.post.findMany({
 		orderBy,
-		include: {
-			_count: { select: { likes: true } },
-		},
+		include: { likes: true },
 	});
 	res.json(posts);
 });

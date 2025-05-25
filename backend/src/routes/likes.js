@@ -7,10 +7,10 @@ const router = express.Router();
 router.post("/:postId", ensureAuthenticated, async (req, res) => {
 	const postId = parseInt(req.params.postId);
 	try {
-		await prisma.like.create({
+		await prisma.postLike.create({
 			data: {
-				userId: req.user.id,
-				postId,
+				user: { connect: { id: req.user.id } },
+				post: { connect: { id: postId } },
 			},
 		});
 		res.status(201).json({ message: "Liked" });
@@ -22,11 +22,11 @@ router.post("/:postId", ensureAuthenticated, async (req, res) => {
 router.delete("/:postId", ensureAuthenticated, async (req, res) => {
 	const postId = parseInt(req.params.postId);
 	try {
-		await prisma.like.delete({
+		await prisma.postLike.delete({
 			where: {
 				userId_postId: {
-					userId: req.user.id,
-					postId,
+					user: { connect: { id: req.user.id } },
+					post: { connect: { id: postId } },
 				},
 			},
 		});

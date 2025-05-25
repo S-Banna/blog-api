@@ -7,7 +7,6 @@ const LikeButton = ({ postId, initialLiked, initialLikes }) => {
 	const { user } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [liked, setLiked] = useState(initialLiked);
-	const [likes, setLikes] = useState(initialLikes);
 	const token = localStorage.getItem("token");
 
 	const toggleLike = () => {
@@ -28,8 +27,7 @@ const LikeButton = ({ postId, initialLiked, initialLikes }) => {
 					}
 				)
 				.then(() => {
-					setLiked(true);
-					setLikes((prev) => prev + 1);
+					window.location.reload();
 				});
 		} else {
 			axios
@@ -42,15 +40,16 @@ const LikeButton = ({ postId, initialLiked, initialLikes }) => {
 					}
 				)
 				.then(() => {
-					setLiked(false);
-					setLikes((prev) => prev - 1);
+					window.location.reload();
 				});
 		}
 	};
 
+	if (initialLiked != liked) setLiked(initialLiked);
+
 	return (
 		<button onClick={toggleLike} style={{ color: liked ? "red" : "black" }}>
-			❤️ Like:  {likes}
+			❤️ Like:  {initialLikes}
 		</button>
 	);
 };
