@@ -21,18 +21,41 @@ router.post("/:postId", ensureAuthenticated, async (req, res) => {
 
 router.delete("/:postId", ensureAuthenticated, async (req, res) => {
 	const postId = parseInt(req.params.postId);
+
+	if (isNaN(postId)) {
+		return res.status(400).json({ message: "Invalid post ID" });
+	}
+
 	try {
-		await prisma.postLike.delete({
+		const existingLike = await prisma.postLike.findUnique({
 			where: {
-				userId_postId: {
-					user: { connect: { id: req.user.id } },
-					post: { connect: { id: postId } },
+				postId_userId: {
+					userId: req.user.id,
+					postId: postId,
 				},
 			},
 		});
-		res.status(200).json({ message: "Unliked" });
-	} catch {
-		res.status(400).json({ message: "Like not found" });
+
+		if (!existingLike) {
+			return res.status(404).json({ message: "Like not found" });
+		}
+
+		await prisma.postLike.delete({
+			where: {
+				postId_userId: {
+					userId: req.user.id,
+					postId: postId,
+				},
+			},
+		});
+
+		return res.status(200).json({ message: "Unliked successfully" });
+	} catch (error) {
+		console.error("Unlike error:", error);
+		return res.status(500).json({
+			message: "Internal server error",
+			error: error.message,
+		});
 	}
 });
 
